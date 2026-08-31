@@ -1,0 +1,205 @@
+.stage {
+  display: grid;
+  align-content: center;
+  justify-items: stretch;
+  min-height: calc(100dvh - 200px);
+  width: min(680px, 100%);
+  margin: 0 auto;
+}
+
+.stageStart {
+  align-content: start;
+  padding-top: 8px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.heading {
+  margin: 0 0 14px;
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line {
+  --thumb: 88px;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ececec;
+}
+
+.remove {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--thumb);
+  height: var(--thumb);
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #171717;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.92);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.remove svg {
+  width: 22px;
+  height: 22px;
+}
+
+.remove:hover {
+  background: #d3384d;
+}
+
+.shift {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--thumb);
+  gap: 12px;
+  align-items: center;
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.line:hover .shift,
+.line:focus-within .shift {
+  transform: translateX(calc(var(--thumb) * -1 - 12px));
+}
+
+.line:hover .remove,
+.line:focus-within .remove {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.meta {
+  margin: 0;
+  color: #737373;
+  font-size: 0.75rem;
+}
+
+.price {
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.preview {
+  position: relative;
+  width: var(--thumb);
+  height: var(--thumb);
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f4f4f4;
+}
+
+.previewImg {
+  object-fit: cover;
+}
+
+.previewIcon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 36px;
+  height: 36px;
+  color: #171717;
+}
+
+.checkout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #ececec;
+}
+
+.total {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.lead {
+  margin: 0;
+  max-width: 40ch;
+  color: #5f5f5f;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+@media (hover: none) {
+  .remove {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .shift {
+    transform: translateX(calc(var(--thumb) * -1 - 12px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .remove,
+  .shift {
+    transition: none;
+  }
+
+  .line:hover .shift,
+  .line:focus-within .shift {
+    transform: none;
+    padding-right: calc(var(--thumb) + 12px);
+  }
+}
+
+@media (max-width: 760px) {
+  .line {
+    --thumb: 72px;
+  }
+}
+

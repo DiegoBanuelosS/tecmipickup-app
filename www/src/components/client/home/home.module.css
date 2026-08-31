@@ -1,0 +1,818 @@
+/* ---------- Header ---------- */
+
+.header {
+  display: grid;
+  gap: 4px;
+}
+
+.greeting {
+  margin: 0;
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: clamp(1.9rem, 4.5vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.greetingName {
+  color: #1b7a4a;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: #5f5f5f;
+  font-size: 1rem;
+}
+
+/* ---------- Category rail ---------- */
+
+.railWrap {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0 calc(var(--page-pad, 20px) * -1);
+  padding: 10px 0;
+  background: rgb(255 255 255 / 0.86);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+}
+
+.rail {
+  display: flex;
+  gap: 8px;
+  padding: 2px var(--page-pad, 20px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: #5f5f5f;
+  font-size: 0.9rem;
+  font-weight: 600;
+  scroll-snap-align: start;
+  transition: color 0.2s ease;
+}
+
+.chip:hover {
+  color: #171717;
+}
+
+.chipActive {
+  color: #fff;
+}
+
+.chipActive:hover {
+  color: #fff;
+}
+
+.chipGlow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: #171717;
+}
+
+.chipIdle {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: 999px;
+  background: #f4f4f4;
+}
+
+.chipIcon {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  transition: transform 0.3s cubic-bezier(0.22, 1.15, 0.36, 1);
+}
+
+.chip:hover .chipIcon {
+  transform: rotate(-10deg) scale(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip:hover .chipIcon {
+    transform: none;
+  }
+}
+
+/* ---------- Ads carousel ---------- */
+
+.adsWrap {
+  position: relative;
+}
+
+.adsRail {
+  display: flex;
+  gap: 14px;
+  margin: 0 calc(var(--page-pad, 20px) * -1);
+  padding: 2px var(--page-pad, 20px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--page-pad, 20px);
+}
+
+.adsRail::-webkit-scrollbar {
+  display: none;
+}
+
+.adSlide {
+  position: relative;
+  flex: 0 0 auto;
+  /* Una publicidad por línea: el ancho útil de la pantalla, con
+     márgenes iguales a ambos lados. */
+  width: min(640px, calc(100vw - var(--page-pad, 20px) * 2));
+  aspect-ratio: 16 / 8;
+  border-radius: 20px;
+  overflow: hidden;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  text-decoration: none;
+  color: #fff;
+  background: #171717;
+  isolation: isolate;
+}
+
+/* Center the group of slides when they fit without scrolling. */
+.adSlide:first-child {
+  margin-left: auto;
+}
+
+.adSlide:last-child {
+  margin-right: auto;
+}
+
+.adImage {
+  object-fit: cover;
+  z-index: -1;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .adSlide:hover .adImage {
+    transform: scale(1.05);
+  }
+}
+
+.adShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(23 23 23 / 0.66), rgb(23 23 23 / 0.28) 48%, rgb(23 23 23 / 0.02) 78%);
+}
+
+.adTag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgb(23 23 23 / 0.45);
+  backdrop-filter: blur(6px);
+  color: rgb(255 255 255 / 0.85);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.adContent {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: end;
+  justify-items: start;
+  gap: 2px;
+  padding: 18px 20px;
+  max-width: 72%;
+}
+
+.adKicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #9fe0bd;
+}
+
+.adHeadline {
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: clamp(1.25rem, 3.4vw, 1.55rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-shadow: 0 2px 12px rgb(23 23 23 / 0.35);
+}
+
+.adSub {
+  font-size: 0.86rem;
+  color: rgb(255 255 255 / 0.82);
+}
+
+.adCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: #fff;
+  color: #171717;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.adSlide:hover .adCta {
+  transform: translateY(-1px);
+  background: #eef7f2;
+}
+
+.adCtaArrow {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.25s ease;
+}
+
+.adSlide:hover .adCtaArrow {
+  transform: translateX(3px);
+}
+
+.adNav {
+  position: absolute;
+  top: calc((100% - 25px) / 2);
+  transform: translateY(-50%);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.88);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  color: #171717;
+  box-shadow: 0 8px 24px rgb(23 23 23 / 0.16);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.adNav:hover {
+  background: #fff;
+  box-shadow: 0 12px 30px rgb(23 23 23 / 0.2);
+}
+
+.adNav svg {
+  width: 18px;
+  height: 18px;
+}
+
+.adNavPrev {
+  left: 10px;
+}
+
+.adNavNext {
+  right: 10px;
+}
+
+@media (hover: none), (max-width: 640px) {
+  .adNav {
+    display: none;
+  }
+}
+
+.adsDots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.adDot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #dcdcdc;
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+}
+
+.adDot:hover {
+  background: #a8a8a8;
+}
+
+.adDotActive {
+  width: 22px;
+  background: #171717;
+}
+
+.adDotActive:hover {
+  background: #171717;
+}
+
+/* ---------- Sections ---------- */
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 6px 0 0;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.sectionCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #f4f4f4;
+  color: #5f5f5f;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Restaurant grid ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+}
+
+.cardLink {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 40px 4px 0;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 16px;
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  aspect-ratio: auto;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f4f4f4;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.tileImg {
+  object-fit: cover;
+}
+
+.tileMist {
+  background: #f4f4f4;
+}
+
+.tileSage {
+  background: #eef7f2;
+}
+
+.tileCream {
+  background: #faf5ec;
+}
+
+.tileCloud {
+  background: #f2f4f7;
+}
+
+.tileIcon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  color: #171717;
+  filter: drop-shadow(0 8px 14px rgb(23 23 23 / 0.12));
+  transition: transform 0.4s cubic-bezier(0.22, 1.15, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .card:hover .tile {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgb(23 23 23 / 0.12);
+  }
+
+  .card:hover .tileIcon {
+    transform: scale(1.14) rotate(-5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .tile,
+  .card:hover .tileIcon {
+    transform: none;
+  }
+}
+
+.promoBadge {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #1b7a4a;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.etaBadge {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.9);
+  backdrop-filter: blur(6px);
+  color: #171717;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 4px 14px rgb(23 23 23 / 0.1);
+}
+
+.cardBody {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  max-width: 220px;
+  padding: 0;
+}
+
+.cardTitleRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2px;
+}
+
+.cardName {
+  margin: 0;
+  max-width: 100%;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ratingStar {
+  color: #1b7a4a;
+  font-size: 0.8rem;
+}
+
+.ratingReviews {
+  color: #a8a8a8;
+  font-weight: 500;
+  font-size: 0.78rem;
+}
+
+.cardMeta {
+  margin: 0;
+  max-width: 100%;
+  color: #737373;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 721px) {
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .card {
+    flex: 0 0 264px;
+    width: 264px;
+    border-radius: 20px;
+  }
+
+  .cardLink {
+    display: block;
+    justify-content: initial;
+    padding: 0;
+    border-radius: 20px;
+  }
+
+  .tile {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 3.4;
+    border-radius: 20px;
+  }
+
+  .tileIcon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .promoBadge,
+  .etaBadge {
+    display: block;
+  }
+
+  .cardBody {
+    gap: 3px;
+    max-width: none;
+    padding: 12px 4px 0;
+  }
+
+  .cardTitleRow {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .cardName {
+    font-size: 1.02rem;
+  }
+
+  .cardMeta {
+    font-size: 0.85rem;
+  }
+
+  .skelTile {
+    width: auto;
+    height: auto;
+    aspect-ratio: 5 / 3.4;
+    border-radius: 20px;
+  }
+}
+
+/* ---------- Favorite button ---------- */
+
+.favButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgb(23 23 23 / 0.12);
+  color: #737373;
+}
+
+.favButton:hover {
+  color: #171717;
+}
+
+.favButtonOn {
+  color: #d3384d;
+}
+
+.favButtonOn:hover {
+  color: #d3384d;
+}
+
+.favHeart {
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+
+.favPing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #d3384d;
+  pointer-events: none;
+}
+
+/* ---------- Empty state ---------- */
+
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 32px 0 12px;
+}
+
+.emptyIcon {
+  width: 40px;
+  height: 40px;
+  color: #a8a8a8;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.emptyCopy {
+  margin: 0;
+  color: #5f5f5f;
+  font-size: 0.95rem;
+}
+
+.emptyReset {
+  margin-top: 4px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: #171717;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.emptyReset:hover {
+  background: #1b7a4a;
+  transform: translateY(-1px);
+}
+
+/* ---------- Page stack ---------- */
+
+.stack {
+  display: grid;
+  gap: 22px;
+}
+
+/* ---------- Skeleton loader ---------- */
+
+.skel {
+  position: relative;
+  overflow: hidden;
+  background: #f1f1f1;
+  border-radius: 12px;
+}
+
+.skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 32%, rgb(255 255 255 / 0.8) 50%, transparent 68%);
+  transform: translateX(-100%);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel::after {
+    animation: none;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.skelGreeting {
+  height: 42px;
+  width: min(340px, 70%);
+}
+
+.skelTagline {
+  height: 16px;
+  width: 190px;
+  margin-top: 10px;
+}
+
+.skelChips {
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.skelChip {
+  flex: 0 0 auto;
+  height: 40px;
+  width: 104px;
+  border-radius: 999px;
+}
+
+.skelAdsRail {
+  display: flex;
+  gap: 14px;
+  margin: 0 calc(var(--page-pad, 20px) * -1);
+  padding: 2px var(--page-pad, 20px);
+  overflow: hidden;
+}
+
+.skelAdSlide {
+  flex: 0 0 auto;
+  width: min(640px, calc(100vw - var(--page-pad, 20px) * 2));
+  aspect-ratio: 16 / 8;
+  border-radius: 20px;
+}
+
+.skelAdSlide:first-child {
+  margin-left: auto;
+}
+
+.skelAdSlide:last-child {
+  margin-right: auto;
+}
+
+.skelDots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.skelDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+}
+
+.skelSectionTitle {
+  height: 24px;
+  width: 150px;
+}
+
+.skelTile {
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+}
+
+.skelLine {
+  height: 15px;
+  margin-top: 10px;
+}
+
+.skelLineWide {
+  width: 72%;
+}
+
+.skelLineNarrow {
+  width: 52%;
+}

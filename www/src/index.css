@@ -1,0 +1,50 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#__next {
+  min-height: 100%;
+}
+
+html {
+  color-scheme: light;
+  /* Evita que iOS agrande el texto al rotar el teléfono. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans), Manrope, system-ui, sans-serif;
+  background: #fff;
+  color: #171717;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid #1b7a4a;
+  outline-offset: 2px;
+}

@@ -1,0 +1,285 @@
+.wrap {
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top));
+  left: 50%;
+  z-index: 40;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.pill {
+  pointer-events: auto;
+  display: grid;
+  min-width: 260px;
+  max-width: min(280px, calc(100vw - 20px));
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 999px;
+  background: #171717;
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 18px 48px rgb(23 23 23 / 0.3);
+}
+
+.pillOpen {
+  min-width: min(560px, calc(100vw - 20px));
+  max-width: min(620px, calc(100vw - 20px));
+  border-radius: 36px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 16px 10px 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pillOpen .summary {
+  min-height: 64px;
+  padding: 14px 22px 10px 14px;
+}
+
+.summary:focus-visible {
+  outline: 2px solid #1b7a4a;
+  outline-offset: -4px;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.pillOpen .icon {
+  width: 48px;
+  height: 48px;
+}
+
+.icon_received {
+  background: #2a2a2a;
+  color: #d4d4d4;
+}
+
+.icon_preparing {
+  background: #1f3d2e;
+  color: #8fd4ae;
+}
+
+.icon_ready {
+  background: #1b7a4a;
+  color: #fff;
+}
+
+.iconSvg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  overflow: visible;
+}
+
+.pillOpen .iconSvg {
+  width: 30px;
+  height: 30px;
+}
+
+.summaryCopy {
+  display: grid;
+  min-width: 0;
+}
+
+.status {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.pillOpen .status {
+  font-size: 1.2rem;
+}
+
+.meta {
+  color: #a3a3a3;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.details {
+  display: grid;
+  gap: 14px;
+  padding: 4px 28px 28px;
+  overflow: hidden;
+}
+
+.long {
+  margin: 0;
+  color: #e8e8e8;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.eta {
+  margin: 0;
+  color: #8a8a8a;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.lines {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 1px solid #2e2e2e;
+  list-style: none;
+  max-height: min(42vh, 360px);
+  overflow: auto;
+}
+
+.lineTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.linePrice {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.place {
+  margin: 2px 0 0;
+  color: #8a8a8a;
+  font-size: 0.86rem;
+}
+
+.mod {
+  margin: 6px 0 0;
+  color: #c8c8c8;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.mod strong {
+  font-weight: 700;
+  color: #e8e8e8;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #2e2e2e;
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.dismiss {
+  min-height: 48px;
+  margin-top: 4px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: #1b7a4a;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dismiss:focus-visible {
+  outline: 2px solid #8fd4ae;
+  outline-offset: 2px;
+}
+
+/* ---------- QR a pantalla completa (teléfono) ---------- */
+
+.qrScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: calc(14px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom));
+  background: #fff;
+  color: #171717;
+  overflow: auto;
+}
+
+.qrHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.qrHeadCopy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.qrTitle {
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.qrMeta {
+  color: #737373;
+  font-size: 0.8rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qrClose {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #f4f4f4;
+  color: #171717;
+}
+
+.qrClose svg {
+  width: 18px;
+  height: 18px;
+}
+
+.qrClose:focus-visible {
+  outline: 2px solid #1b7a4a;
+  outline-offset: 2px;
+}
+
+.qrFoot {
+  margin: 0;
+  color: #5f5f5f;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}

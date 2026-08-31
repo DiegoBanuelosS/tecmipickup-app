@@ -1,0 +1,307 @@
+.page {
+  display: grid;
+  min-height: calc(100dvh - 128px);
+  background: #fff;
+}
+
+@media (min-width: 900px) {
+  .page {
+    grid-template-columns: 1.05fr 1fr;
+    min-height: calc(100dvh - 128px);
+  }
+}
+
+.visual {
+  position: relative;
+  min-height: 42dvh;
+  overflow: hidden;
+  background: #f4f4f4;
+}
+
+.visualMist {
+  background: #f4f4f4;
+}
+
+.visualSage {
+  background: #eef7f2;
+}
+
+.visualCream {
+  background: #faf5ec;
+}
+
+.visualCloud {
+  background: #f2f4f7;
+}
+
+.visualImg {
+  object-fit: cover;
+}
+
+.visualIcon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(42%, 220px);
+  height: min(42%, 220px);
+  color: #171717;
+}
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #f4f4f4;
+  color: #171717;
+}
+
+.close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.panel {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: 22px;
+  min-height: 100%;
+  padding: 22px clamp(20px, 4vw, 40px) 24px;
+  padding-right: max(64px, clamp(20px, 4vw, 40px));
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1b7a4a;
+}
+
+.title {
+  margin: 4px 0 0;
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.copy {
+  margin: 8px 0 0;
+  max-width: 46ch;
+  color: #5f5f5f;
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.eta {
+  color: #737373;
+  font-size: 0.9rem;
+}
+
+.group {
+  display: grid;
+  gap: 10px;
+}
+
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.groupHint {
+  color: #8a8a8a;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1.5px solid #ececec;
+  border-radius: 999px;
+  background: #fff;
+  color: #171717;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.chip:hover {
+  border-color: #c8c8c8;
+}
+
+.chipOn {
+  border-color: #171717;
+  background: #171717;
+  color: #fff;
+}
+
+.chipDelta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1b7a4a;
+}
+
+.chipOn .chipDelta {
+  color: #9fe0bd;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #ececec;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 56px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #f4f4f4;
+}
+
+.qtyBtn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #171717;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px rgb(23 23 23 / 0.08);
+}
+
+.qtyBtn:disabled {
+  opacity: 0.4;
+}
+
+.qtyValue {
+  min-width: 1.5ch;
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.add {
+  width: min(100%, 280px);
+  height: 56px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 999px;
+  background: #1b7a4a;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 28px rgb(27 122 74 / 0.28);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add:hover {
+  background: #15633c;
+  box-shadow: 0 14px 32px rgb(27 122 74 / 0.34);
+  transform: translateY(-1px);
+}
+
+.add:disabled {
+  background: #c8c8c8;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.recs {
+  display: grid;
+  gap: 16px;
+}
+
+.recsTitle {
+  margin: 0;
+  font-family: var(--font-display), "Bricolage Grotesque", "Segoe UI", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.recCard {
+  border: 0;
+  padding: 0;
+  background: none;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.tileRing {
+  box-shadow: 0 0 0 2px #1b7a4a, 0 18px 38px rgb(23 23 23 / 0.12);
+}
+
+.missing {
+  display: grid;
+  place-content: center;
+  min-height: 60dvh;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.missing a {
+  margin-top: 12px;
+  font-weight: 700;
+  color: #1b7a4a;
+}

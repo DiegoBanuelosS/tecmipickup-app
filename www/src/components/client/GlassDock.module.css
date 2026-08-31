@@ -1,0 +1,148 @@
+.wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px calc(20px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.dock {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  width: max-content;
+  padding: 16px 24px;
+  overflow: visible;
+  border-radius: 16px;
+  /* Frosted glass approximation. */
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background: rgb(255 255 255 / 0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.65),
+    0 18px 50px rgb(23 23 23 / 0.16);
+}
+
+.tooltipAnchor {
+  position: absolute;
+  top: 0;
+  z-index: 30;
+  transform: translate(-50%, calc(-100% - 14px));
+  pointer-events: none;
+}
+
+.tooltip {
+  transform-origin: 50% 100%;
+}
+
+.tooltipInner {
+  min-width: 100px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #171717;
+  color: #fff;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 10px 24px rgb(23 23 23 / 0.18);
+}
+
+.tooltipCopy {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.tooltipSub {
+  font-size: 11px;
+  font-weight: 500;
+  color: #c8c8c8;
+  font-variant-numeric: tabular-nums;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  overflow: visible;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: #737373;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.item:hover,
+.itemHovered {
+  color: #171717;
+}
+
+.itemActive {
+  color: #1b7a4a;
+}
+
+.iconWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  transform-origin: 50% 100%;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  z-index: 2;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #d3384d;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.icon,
+.iconActive {
+  display: block;
+  overflow: visible;
+  width: 22px;
+  height: 22px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .dock {
+    background: #fff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Objetivos táctiles más grandes en pantallas sin puntero fino. */
+@media (hover: none) {
+  .item {
+    width: 44px;
+    height: 44px;
+  }
+}
