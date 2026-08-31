@@ -3,7 +3,7 @@
 #   fly secrets set MONGODB_URI=... JWT_SECRET=...
 
 app = "tecmipickup"
-primary_region = "LAX"
+primary_region = "lax"
 
 [build]
   dockerfile = "Dockerfile"
