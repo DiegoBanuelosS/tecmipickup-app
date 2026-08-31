@@ -1,0 +1,38 @@
+# Deploy from this directory: fly deploy
+# Secrets (set on the Fly account that owns the app, not in this file):
+#   fly secrets set MONGODB_URI=... JWT_SECRET=...
+
+app = "tecmipickup"
+primary_region = "LAX"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  MONGODB_DATABASE = "tecmipickup"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
+
+[[http_service.checks]]
+  grace_period = "45s"
+  interval = "15s"
+  method = "GET"
+  timeout = "5s"
+  path = "/api/horarios"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
