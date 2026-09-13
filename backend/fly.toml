@@ -10,7 +10,7 @@ primary_region = "lax"
 
 [env]
   PORT = "8080"
-  MONGODB_DATABASE = "tecmipickup"
+  MONGODB_DATABASE = "vertice"
 
 [http_service]
   internal_port = 8080

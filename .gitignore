@@ -1,8 +1,15 @@
 node_modules
 .next
+out
 dist
+.wrangler
+target/
 .DS_Store
 *.local
 .env
 .env.*
+*.log
 .vscode
+.idea
+*.iml
+

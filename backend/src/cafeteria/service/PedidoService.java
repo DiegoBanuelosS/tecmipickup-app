@@ -1,16 +1,17 @@
 package cafeteria.service;
 
+import cafeteria.config.CacheConfig;
 import cafeteria.dto.DetallePedidoRequest;
 import cafeteria.dto.DetallePedidoResponse;
 import cafeteria.dto.PedidoRequest;
 import cafeteria.dto.PedidoResponse;
+import cafeteria.dto.ResumenPedidoRecursivo;
 import cafeteria.entity.DetallePedido;
 import cafeteria.entity.HorarioCafeteria;
 import cafeteria.entity.Pedido;
 import cafeteria.entity.PedidoEstado;
 import cafeteria.entity.Producto;
 import cafeteria.entity.Usuario;
-import cafeteria.config.CacheConfig;
 import cafeteria.exception.ApiException;
 import cafeteria.kitchen.CocinaCola;
 import cafeteria.repository.PedidoRepository;
@@ -48,6 +49,7 @@ public class PedidoService {
     })
     public PedidoResponse crearPedido(String usuarioId, PedidoRequest request) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
+                .or(() -> usuarioRepository.findByEmail(usuarioId))
                 .orElseThrow(() -> ApiException.notFound("Usuario no encontrado."));
 
         LocalDateTime ahora = LocalDateTime.now();
@@ -66,7 +68,6 @@ public class PedidoService {
 
         Map<String, Producto> catalogo = new HashMap<>();
         List<DetallePedido> lineas = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
 
         for (Map.Entry<String, Integer> entry : cantidades.entrySet()) {
             Producto producto = catalogo.computeIfAbsent(entry.getKey(), id ->
@@ -81,7 +82,6 @@ public class PedidoService {
             }
 
             BigDecimal subtotal = producto.getPrecio().multiply(BigDecimal.valueOf(entry.getValue()));
-            total = total.add(subtotal);
 
             lineas.add(DetallePedido.builder()
                     .productoId(producto.getId())
@@ -94,6 +94,11 @@ public class PedidoService {
             producto.setStock(producto.getStock() - entry.getValue());
             productoRepository.save(producto);
         }
+
+        // ========================================================
+        // USO DE RECURSIVIDAD: Cálculo recursivo del total del pedido
+        // ========================================================
+        BigDecimal total = calcularTotalRecursivo(lineas, 0);
 
         Pedido pedido = Pedido.builder()
                 .usuarioId(usuario.getId())
@@ -116,10 +121,25 @@ public class PedidoService {
     }
 
     public List<PedidoResponse> consultarPedidosUsuario(String usuarioId) {
-        if (!usuarioRepository.existsById(usuarioId)) {
-            throw ApiException.notFound("Usuario no encontrado.");
-        }
-        return pedidoRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId)
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .or(() -> usuarioRepository.findByEmail(usuarioId))
+                .orElseThrow(() -> ApiException.notFound("Usuario no encontrado."));
+        return pedidoRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuario.getId())
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<PedidoResponse> listarTodos() {
+        return pedidoRepository.findAll()
+                .stream()
+                .sorted((a, b) -> b.getFechaCreacion().compareTo(a.getFechaCreacion()))
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<PedidoResponse> consultarPorEstado(PedidoEstado estado) {
+        return pedidoRepository.findByEstadoOrderByFechaCreacionDesc(estado)
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -194,6 +214,104 @@ public class PedidoService {
 
     public List<String> bitacoraCocina() {
         return cocinaCola.bitacora();
+    }
+
+    // ========================================================
+    // SECCIÓN DE RECURSIVIDAD Y PILAS EN PEDIDOS
+    // ========================================================
+
+    /**
+     * Algoritmo RECURSIVO para calcular el costo total acumulado del pedido.
+     *
+     * @param detalles Lista de líneas del pedido.
+     * @param indice Posición actual evaluada en la recursión.
+     * @return Suma recursiva del total.
+     */
+    public BigDecimal calcularTotalRecursivo(List<DetallePedido> detalles, int indice) {
+        // CASO BASE: lista vacía o fin de los detalles alcanzado
+        if (detalles == null || indice >= detalles.size()) {
+            return BigDecimal.ZERO;
+        }
+
+        DetallePedido actual = detalles.get(indice);
+        BigDecimal subtotal = actual.getSubtotal() != null
+                ? actual.getSubtotal()
+                : actual.getPrecioUnitario().multiply(BigDecimal.valueOf(actual.getCantidad()));
+
+        // PASO RECURSIVO: subtotal actual + suma recursiva del resto de elementos
+        return subtotal.add(calcularTotalRecursivo(detalles, indice + 1));
+    }
+
+    /**
+     * Algoritmo RECURSIVO para sumar la cantidad total de artículos de un pedido.
+     *
+     * @param detalles Lista de detalles.
+     * @param indice Posición actual.
+     * @return Suma recursiva de cantidades.
+     */
+    public int calcularCantidadTotalRecursivo(List<DetallePedido> detalles, int indice) {
+        // CASO BASE
+        if (detalles == null || indice >= detalles.size()) {
+            return 0;
+        }
+        // PASO RECURSIVO
+        return detalles.get(indice).getCantidad() + calcularCantidadTotalRecursivo(detalles, indice + 1);
+    }
+
+    /**
+     * Consulta el resumen analítico de un pedido calculado recursivamente.
+     */
+    public ResumenPedidoRecursivo obtenerResumenRecursivo(String pedidoId) {
+        Pedido pedido = obtener(pedidoId);
+        int cantidadTotal = calcularCantidadTotalRecursivo(pedido.getDetalles(), 0);
+        BigDecimal totalRecursivo = calcularTotalRecursivo(pedido.getDetalles(), 0);
+        int tiempoEstimadoMinutos = 3 + (cantidadTotal * 2);
+
+        return ResumenPedidoRecursivo.builder()
+                .pedidoId(pedido.getId())
+                .cliente(pedido.getUsuarioNombre())
+                .estado(pedido.getEstado())
+                .fechaEntrega(pedido.getFechaEntregaSolicitada())
+                .cantidadTotalArticulosRecursivo(cantidadTotal)
+                .totalCalculadoRecursivo(totalRecursivo)
+                .tiempoEstimadoPreparacionMinutos(tiempoEstimadoMinutos)
+                .metodoCalculo("Recursión lineal sobre lista enlazada de detalles")
+                .build();
+    }
+
+    /**
+     * Retorna el tiempo total estimado acumulado en la cola de cocina usando cálculo recursivo.
+     */
+    public Map<String, Object> tiempoEstimadoCocinaRecursivo() {
+        List<Pedido> pendientes = cocinaCola.obtenerPedidosPendientesCola();
+        int minutos = cocinaCola.calcularTiempoEsperaColaRecursivo(pendientes, 0);
+
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("pedidosEnCola", pendientes.size());
+        resultado.put("tiempoTotalMinutos", minutos);
+        resultado.put("metodo", "Cálculo Recursivo en CocinaCola");
+        return resultado;
+    }
+
+    /**
+     * Acceso a la PILA de historial de cambios en cocina.
+     */
+    public List<CocinaCola.CambioEstado> obtenerHistorialPila() {
+        return cocinaCola.listarHistorialPila();
+    }
+
+    /**
+     * Acceso a la cima de la PILA de historial sin desapilar.
+     */
+    public CocinaCola.CambioEstado obtenerCimaHistorialPila() {
+        return cocinaCola.verCimaHistorial();
+    }
+
+    /**
+     * Acceso a la PILA de órdenes recientes de cocina.
+     */
+    public List<Pedido> obtenerOrdenesRecientesPila() {
+        return cocinaCola.listarOrdenesRecientesPila();
     }
 
     private Pedido obtener(String id) {

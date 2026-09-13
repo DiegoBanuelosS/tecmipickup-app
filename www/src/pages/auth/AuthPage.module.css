@@ -87,6 +87,103 @@
   color: #2e2e2e;
 }
 
+.fieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.roleToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.roleToggle input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #1b7a4a;
+  cursor: pointer;
+}
+
+.roleToggle span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1b7a4a;
+  transition: color 0.15s ease;
+}
+
+.roleToggle:hover span {
+  color: #145e38;
+}
+
+.fieldLabelAnimated {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  height: 22px;
+}
+
+.fadeText {
+  display: inline-block;
+  animation: fadeSlideIn 0.32s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inputWrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.restaurantIcon {
+  position: absolute;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1b7a4a;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  z-index: 2;
+}
+
+.restaurantIconActive {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.morphInput {
+  transition: border-color 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+              padding-left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.morphInputRestaurant {
+  background-color: #f0f8f3 !important;
+  border: 1.5px solid rgba(27, 122, 74, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(27, 122, 74, 0.12), inset 3.5px 0 0 #1b7a4a !important;
+  padding-left: 40px !important;
+}
+
 .field input,
 .passwordRow {
   width: 100%;
@@ -189,7 +286,10 @@
 }
 
 .submit {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
   height: 50px;
   margin-top: 6px;
@@ -199,7 +299,9 @@
   background: #1b7a4a;
   color: #fff;
   font-weight: 700;
+  font-size: 0.95rem;
   transition: background-color 160ms ease;
+  cursor: pointer;
 }
 
 .submit:hover:not(:disabled) {
@@ -208,7 +310,24 @@
 
 .submit:disabled {
   cursor: wait;
-  opacity: 0.78;
+  opacity: 0.85;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgb(255 255 255 / 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .switch {
@@ -260,17 +379,23 @@
 @media (max-width: 860px) {
   .page {
     align-items: stretch;
-    padding: 56px 12px 12px;
+    padding: calc(60px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  }
+
+  .brand {
+    top: calc(16px + env(safe-area-inset-top));
+    left: 18px;
   }
 
   .card {
     grid-template-columns: 1fr;
     height: auto;
-    min-height: calc(100dvh - 28px);
+    min-height: auto;
   }
 
   .formPane {
-    padding: 28px 22px 20px;
+    padding: 16px 12px 20px;
+    justify-content: flex-start;
   }
 
   .visual {

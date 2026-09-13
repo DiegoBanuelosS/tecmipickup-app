@@ -104,7 +104,7 @@ export default function RecentOrders({ orders, defaultOpen = false, onReorder }:
                         <span>
                           {line.quantity}× {line.name}
                         </span>
-                        {line.labels.length > 0 ? <small>{line.labels.join(" · ")}</small> : null}
+                        {line.labels && line.labels.length > 0 ? <small>{line.labels.join(" · ")}</small> : null}
                       </span>
                     </li>
                   ))}

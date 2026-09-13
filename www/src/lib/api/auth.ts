@@ -13,6 +13,8 @@ export type RegisterPayload = {
   name: string;
   email: string;
   password: string;
+  matricula?: string;
+  isRestaurant?: boolean;
 };
 
 export type ForgotPasswordPayload = {
@@ -102,9 +104,11 @@ export async function login(payload: LoginPayload): Promise<Session> {
   }
 }
 
-export async function register(payload: RegisterPayload): Promise<Session | void> {
+export async function register(payload: RegisterPayload): Promise<Session> {
   if (apiConfig.bypassAuth) {
-    return;
+    const session = bypassSession(payload.email, payload.name);
+    setSession(session, true);
+    return session;
   }
 
   const raw = await apiFetch<unknown>("/api/auth/register", {
@@ -116,20 +120,15 @@ export async function register(payload: RegisterPayload): Promise<Session | void
       correo: payload.email,
       password: payload.password,
       contrasena: payload.password,
+      matricula: payload.matricula,
+      codigoRestaurante: payload.matricula,
+      isRestaurant: payload.isRestaurant,
     }),
   });
 
-  if (raw === undefined || !pick(unwrapObject(raw), "token", "accessToken", "jwt")) {
-    return;
-  }
-
-  try {
-    const session = toSession(raw, payload.email, payload.name);
-    setSession(session, true);
-    return session;
-  } catch {
-    return;
-  }
+  const session = toSession(raw, payload.email, payload.name);
+  setSession(session, true);
+  return session;
 }
 
 export async function forgotPassword(_payload: ForgotPasswordPayload): Promise<void> {

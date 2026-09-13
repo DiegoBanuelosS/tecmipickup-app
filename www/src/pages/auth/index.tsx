@@ -33,6 +33,8 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [matricula, setMatricula] = useState("");
+  const [isRestaurant, setIsRestaurant] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -152,10 +154,30 @@ export default function AuthPage() {
     }
 
     if (view === "register") {
+      if (!name.trim() || !email.trim() || !password.trim()) {
+        setError("Por favor completa los campos de nombre, correo y contraseña.");
+        return;
+      }
+
       setBusy(true);
       try {
-        await register({ name, email, password });
-        goToView("login", { force: true });
+        const session = await register({
+          name: name.trim(),
+          email: email.trim(),
+          password,
+          matricula: matricula.trim(),
+          isRestaurant,
+        });
+        try {
+          await Promise.race([
+            animateLeave(),
+            new Promise((resolve) => setTimeout(resolve, 400)),
+          ]);
+        } catch {
+          // ignore animation failure
+        }
+        const targetRoute = isRestaurant || session?.user?.role === "restaurant" ? routes.restaurant : routes.client;
+        await router.push(targetRoute);
       } catch (cause) {
         setError(cause instanceof ApiError ? cause.message : "No se pudo crear la cuenta.");
         setBusy(false);
@@ -163,12 +185,25 @@ export default function AuthPage() {
       return;
     }
 
+    if (!email.trim() || !password.trim()) {
+      setError("Por favor ingresa tu correo y contraseña.");
+      return;
+    }
+
     setBusy(true);
 
     try {
-      await login({ email, password, remember });
-      await animateLeave();
-      await router.push(routes.client);
+      const session = await login({ email: email.trim(), password, remember });
+      try {
+        await Promise.race([
+          animateLeave(),
+          new Promise((resolve) => setTimeout(resolve, 400)),
+        ]);
+      } catch {
+        // ignore animation failure
+      }
+      const targetRoute = session?.user?.role === "restaurant" ? routes.restaurant : routes.client;
+      await router.push(targetRoute);
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : "No se pudo entrar.");
       setBusy(false);
@@ -195,16 +230,59 @@ export default function AuthPage() {
 
           <form className={styles.form} onSubmit={handleSubmit} noValidate aria-busy={busy}>
             {view === "register" ? (
-              <label className={styles.field}>
-                <span>Nombre</span>
-                <input
-                  name="name"
-                  autoComplete="name"
-                  placeholder="Ana Miratti"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                />
-              </label>
+              <>
+                <label className={styles.field}>
+                  <span>Nombre</span>
+                  <input
+                    name="name"
+                    autoComplete="name"
+                    placeholder="Ana Miratti"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </label>
+
+                <div className={styles.field}>
+                  <div className={styles.fieldHeader}>
+                    <label htmlFor="matricula-input" className={styles.fieldLabelAnimated}>
+                      <span key={isRestaurant ? "rest" : "mat"} className={styles.fadeText}>
+                        {isRestaurant ? "Código de Restaurante" : "Matrícula"}
+                      </span>
+                    </label>
+                    <label className={styles.roleToggle}>
+                      <input
+                        type="checkbox"
+                        checked={isRestaurant}
+                        onChange={(event) => setIsRestaurant(event.target.checked)}
+                      />
+                      <span>Soy restaurante</span>
+                    </label>
+                  </div>
+                  <div className={styles.inputWrap}>
+                    <span
+                      className={`${styles.restaurantIcon} ${isRestaurant ? styles.restaurantIconActive : ""}`}
+                      aria-hidden="true"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                        <line x1="6" y1="1" x2="6" y2="4"/>
+                        <line x1="10" y1="1" x2="10" y2="4"/>
+                        <line x1="14" y1="1" x2="14" y2="4"/>
+                      </svg>
+                    </span>
+                    <input
+                      id="matricula-input"
+                      name={isRestaurant ? "codigoRestaurante" : "matricula"}
+                      autoComplete="off"
+                      placeholder={isRestaurant ? "Ej. REST-1024" : "Ej. AL02938475"}
+                      value={matricula}
+                      onChange={(event) => setMatricula(event.target.value)}
+                      className={`${styles.morphInput} ${isRestaurant ? styles.morphInputRestaurant : ""}`}
+                    />
+                  </div>
+                </div>
+              </>
             ) : null}
 
             <label className={styles.field}>
@@ -274,13 +352,16 @@ export default function AuthPage() {
             ) : null}
 
             <button type="submit" className={styles.submit} ref={submitRef} disabled={busy}>
-              {view === "login"
-                ? "Entrar"
-                : view === "register"
-                  ? "Crear cuenta"
-                  : sent
-                    ? "Reenviar enlace"
-                    : "Enviar enlace"}
+              {busy ? <span className={styles.spinner} aria-hidden="true" /> : null}
+              <span>
+                {view === "login"
+                  ? "Iniciar sesión"
+                  : view === "register"
+                    ? "Crear cuenta"
+                    : sent
+                      ? "Reenviar enlace"
+                      : "Enviar enlace"}
+              </span>
             </button>
           </form>
 

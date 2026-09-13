@@ -218,3 +218,49 @@
 .gridLeft {
   justify-content: flex-start;
 }
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: calc(100dvh - 140px);
+  }
+
+  .group {
+    gap: 20px;
+  }
+
+  .box {
+    border-radius: 18px;
+  }
+
+  .input {
+    height: 56px;
+    padding: 0 46px 0 48px;
+    font-size: 1.05rem;
+    border-radius: 18px;
+  }
+
+  .icon {
+    top: 18px;
+    left: 16px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .ghost {
+    left: 48px;
+    right: 46px;
+    font-size: 1.02rem;
+  }
+
+  .typeGhost {
+    padding: 0 46px 0 48px;
+    font-size: 1.05rem;
+  }
+
+  .clear {
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+  }
+}

@@ -172,15 +172,30 @@
   line-height: 1.45;
 }
 
-@media (hover: none) {
-  .remove {
+@media (hover: none), (max-width: 640px) {
+  .line .remove {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 38px;
+    height: 38px;
     opacity: 1;
     pointer-events: auto;
-    transform: none;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: #f4f4f4;
+    color: #737373;
+  }
+
+  .line .remove:active,
+  .line .remove:hover {
+    background: #fee2e2;
+    color: #dc2626;
   }
 
   .shift {
-    transform: translateX(calc(var(--thumb) * -1 - 12px));
+    transform: none !important;
+    padding-right: 46px;
   }
 }
 
@@ -200,6 +215,21 @@
 @media (max-width: 760px) {
   .line {
     --thumb: 72px;
+  }
+
+  .stage {
+    min-height: calc(100dvh - 160px);
+    padding: 0 4px;
+  }
+
+  .checkout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .checkout button {
+    width: 100%;
   }
 }
 

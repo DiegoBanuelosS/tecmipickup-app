@@ -5,6 +5,8 @@ export const routes = {
   clientPay: "/client/pay",
   clientSearch: "/client/search",
   restaurant: "/restaurant",
+  restaurantPedidos: "/restaurant/pedidos",
+  restaurantInventario: "/restaurant/inventario",
 } as const;
 
 export function itemPath(slug: string) {

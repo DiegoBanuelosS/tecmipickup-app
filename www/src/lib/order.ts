@@ -237,13 +237,15 @@ export function orderStatus(order: ActiveOrder, now = Date.now()): OrderStatus {
 
 export function orderMods(line: CartLine): OrderMod[] {
   const item = getMenuItem(line.slug);
+  const labels = Array.isArray(line.labels) ? line.labels : [];
+  const selections = line.selections ?? {};
   if (!item) {
-    return line.labels.length > 0 ? [{ title: "Cómo lo pediste", values: line.labels }] : [];
+    return labels.length > 0 ? [{ title: "Cómo lo pediste", values: labels }] : [];
   }
 
-  const groups = item.groups
+  const groups = (item.groups ?? [])
     .map((group) => {
-      const picked = line.selections[group.id] ?? [];
+      const picked = selections[group.id] ?? [];
       const values = group.options.filter((option) => picked.includes(option.id)).map((option) => option.label);
       if (values.length === 0) {
         return null;
@@ -256,7 +258,7 @@ export function orderMods(line: CartLine): OrderMod[] {
     return groups;
   }
 
-  return line.labels.length > 0 ? [{ title: "Cómo lo pediste", values: line.labels }] : [];
+  return labels.length > 0 ? [{ title: "Cómo lo pediste", values: labels }] : [];
 }
 
 export type PickupTicket = {

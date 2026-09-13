@@ -94,7 +94,7 @@ export default function OrderIsland() {
   }, [order]);
 
   useEffect(() => {
-    if (!order?.id || order.id.startsWith("ord-")) {
+    if (!order?.id) {
       return;
     }
 
@@ -108,9 +108,11 @@ export default function OrderIsland() {
           return;
         }
 
-        const remote = await fetchPedido(orderId, current);
-        if (!cancelled && remote) {
-          applyRemoteOrder(remote);
+        if (!orderId.startsWith("ord-")) {
+          const remote = await fetchPedido(orderId, current);
+          if (!cancelled && remote) {
+            applyRemoteOrder(remote);
+          }
         }
       } catch {
         // El temporizador local sigue mostrando el estado.
@@ -118,7 +120,7 @@ export default function OrderIsland() {
     };
 
     void refresh();
-    const poll = window.setInterval(() => void refresh(), 8_000);
+    const poll = window.setInterval(() => void refresh(), 2_500);
     return () => {
       cancelled = true;
       window.clearInterval(poll);

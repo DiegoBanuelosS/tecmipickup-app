@@ -444,3 +444,32 @@
   text-decoration: none;
 }
 
+@media (max-width: 600px) {
+  .receipt,
+  .panel {
+    padding: 16px 14px 20px;
+  }
+
+  .receiptTitle,
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .options {
+    gap: 6px;
+  }
+
+  .chip {
+    padding: 6px 12px;
+    font-size: 0.88rem;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}
+

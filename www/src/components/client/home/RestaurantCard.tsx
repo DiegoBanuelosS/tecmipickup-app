@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { itemPath } from "@config/Router";
 import { getMenuItem } from "@lib/data/menu";
 import { priceLabel, type Restaurant } from "@lib/data/restaurants";
+import { Star } from "lucide-react";
 import { FoodIcon } from "./FoodIcons";
 import styles from "./home.module.css";
 
@@ -68,7 +69,7 @@ export default function RestaurantCard({ restaurant, favorite, onToggleFavorite 
             <h3 className={styles.cardName}>{restaurant.name}</h3>
             <span className={styles.rating}>
               <span className={styles.ratingStar} aria-hidden="true">
-                ★
+                <Star size={12} fill="currentColor" strokeWidth={0} />
               </span>
               {restaurant.rating.toFixed(1)}
               <span className={styles.ratingReviews}>({restaurant.reviews})</span>

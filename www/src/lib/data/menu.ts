@@ -358,6 +358,26 @@ export const menuItems: MenuItem[] = [
       },
     ],
   },
+  {
+    id: "6aa32e3a57a74865706f64d5",
+    slug: "cafe-americano",
+    restaurantId: "r-central",
+    name: "Café americano",
+    description: "Café de grano recién tostado con notas tostadas y balance suave.",
+    price: 35,
+    glyph: "coffee",
+    groups: [],
+  },
+  {
+    id: "6aa32e3a57a74865706f64d6",
+    slug: "taco-sencillo",
+    restaurantId: "r-buho",
+    name: "Taco sencillo",
+    description: "Taco de guisado tradicional servido en tortilla caliente.",
+    price: 50,
+    glyph: "taco",
+    groups: [],
+  },
 ];
 
 function withZeroPrice(groups: OptionGroup[]): OptionGroup[] {

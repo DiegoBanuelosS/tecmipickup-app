@@ -60,6 +60,22 @@ async function readError(response: Response) {
   }
 }
 
+async function doFetch(url: string, headers: Headers, init: RequestInit, timeoutMs = 5000): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...init,
+      headers,
+      signal: init.signal ?? controller.signal,
+      credentials: sameOriginRequest() ? "include" : "omit",
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (!apiConfig.baseUrl) {
     throw new ApiError("La API aún no está configurada.", 0);
@@ -77,11 +93,29 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(apiUrl(path), {
-    ...init,
-    headers,
-    credentials: sameOriginRequest() ? "include" : "omit",
-  });
+  let response: Response;
+  const targetUrl = apiUrl(path);
+
+  try {
+    response = await doFetch(targetUrl, headers, init, 5000);
+  } catch (err: unknown) {
+    const isLocal = typeof window !== "undefined" && window.location.hostname === "localhost";
+    const isNotLocalUrl = !targetUrl.includes("localhost:8080") && !targetUrl.includes("127.0.0.1:8080");
+
+    if (isLocal && isNotLocalUrl) {
+      try {
+        const localUrl = `http://localhost:8080${path.startsWith("/") ? path : `/${path}`}`;
+        response = await doFetch(localUrl, headers, init, 5000);
+      } catch {
+        throw new ApiError("No se pudo conectar con el servidor. Verifica que el backend esté activo.", 0);
+      }
+    } else {
+      if (err instanceof Error && err.name === "AbortError") {
+        throw new ApiError("El servidor tardó demasiado en responder.", 408);
+      }
+      throw new ApiError("No se pudo conectar con el servidor.", 0);
+    }
+  }
 
   if (!response.ok) {
     throw new ApiError(await readError(response), response.status);

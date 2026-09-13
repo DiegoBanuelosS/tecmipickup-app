@@ -5,4 +5,4 @@ export type { LoginPayload, RegisterPayload, ForgotPasswordPayload } from "./aut
 export { fetchHomeData, prefetchCatalog, getExpectedCounts, defaultHomeCounts } from "./home";
 export type { HomeData, HomeCounts } from "./home";
 export { fetchProductosByCategoria, restaurantsForCategory } from "./catalog";
-export { createPedido, fetchPedido, fetchUserPedidos } from "./orders";
+export { createPedido, fetchPedido, fetchUserPedidos, fetchAllPedidos, patchPedidoEstado } from "./orders";

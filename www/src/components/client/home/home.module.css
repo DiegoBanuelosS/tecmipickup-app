@@ -257,6 +257,38 @@
   transform: translateX(3px);
 }
 
+@media (max-width: 540px) {
+  .adSlide {
+    aspect-ratio: 16 / 10;
+    min-height: 184px;
+    border-radius: 16px;
+  }
+
+  .adContent {
+    max-width: 88%;
+    padding: 12px 14px;
+  }
+
+  .adHeadline {
+    font-size: 1.15rem;
+    line-height: 1.15;
+  }
+
+  .adSub {
+    font-size: 0.78rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .adCta {
+    margin-top: 6px;
+    padding: 5px 10px;
+    font-size: 0.74rem;
+  }
+}
+
 .adNav {
   position: absolute;
   top: calc((100% - 25px) / 2);
@@ -382,10 +414,16 @@
   justify-content: flex-start;
   align-items: center;
   gap: 12px;
-  padding: 4px 40px 4px 0;
+  padding: 6px 8px;
   text-decoration: none;
   color: inherit;
   border-radius: 16px;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.cardLink:active {
+  background: #f7f7f7;
 }
 
 .tile {
@@ -485,7 +523,8 @@
   display: grid;
   gap: 2px;
   min-width: 0;
-  max-width: 220px;
+  flex: 1;
+  max-width: none;
   padding: 0;
 }
 
@@ -500,7 +539,7 @@
 .cardName {
   margin: 0;
   max-width: 100%;
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   white-space: nowrap;
@@ -533,29 +572,25 @@
   margin: 0;
   max-width: 100%;
   color: #737373;
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-@media (min-width: 721px) {
+@media (min-width: 600px) {
   .grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 18px;
   }
 
   .card {
-    flex: 0 0 264px;
-    width: 264px;
     border-radius: 20px;
   }
 
   .cardLink {
     display: block;
-    justify-content: initial;
     padding: 0;
     border-radius: 20px;
   }
@@ -602,6 +637,13 @@
     height: auto;
     aspect-ratio: 5 / 3.4;
     border-radius: 20px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
   }
 }
 

@@ -1,5 +1,5 @@
 .shell {
-  --page-pad: clamp(20px, 4vw, 56px);
+  --page-pad: clamp(14px, 4vw, 56px);
   min-height: 100dvh;
   background: #fff;
   color: #171717;
@@ -9,7 +9,9 @@
 .topbar {
   display: flex;
   align-items: center;
-  padding: 16px var(--page-pad) 4px;
+  max-width: 1360px;
+  margin-inline: auto;
+  padding: 14px var(--page-pad) 4px;
 }
 
 .brand {
@@ -77,6 +79,8 @@
 
 .body {
   width: 100%;
+  max-width: 1360px;
+  margin-inline: auto;
   padding: 0 var(--page-pad);
 }
 

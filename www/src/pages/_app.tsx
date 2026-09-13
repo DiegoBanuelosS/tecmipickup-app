@@ -4,6 +4,7 @@ import Head from "next/head";
 import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import { prefetchCatalog } from "@lib/api";
 import "../index.css";
+import "./restaurant/kanban.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -18,6 +19,7 @@ const bricolage = Bricolage_Grotesque({
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     void prefetchCatalog();
+    document.documentElement.classList.add(manrope.variable, bricolage.variable);
   }, []);
 
   return (

@@ -402,8 +402,15 @@ export default function ItemPage() {
 }
 
 export function getStaticPaths() {
+  const slugs = new Set<string>();
+  for (const item of menuItems) {
+    if (item.slug) slugs.add(item.slug);
+    if (item.id) slugs.add(item.id);
+  }
+  slugs.add("_");
+
   return {
-    paths: [...menuItems.map((entry) => ({ params: { slug: entry.slug } })), { params: { slug: "_" } }],
+    paths: Array.from(slugs).map((slug) => ({ params: { slug } })),
     fallback: false,
   };
 }

@@ -109,8 +109,28 @@ function linePayload(line: CartLine) {
   };
 }
 
+function defaultFechaEntrega(): string {
+  const target = new Date(Date.now() + 3 * 3600 * 1000);
+  if (target.getHours() < 9) {
+    target.setHours(10, 0, 0, 0);
+  } else if (target.getHours() >= 18) {
+    target.setDate(target.getDate() + 1);
+    target.setHours(11, 0, 0, 0);
+  }
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(target.getMinutes())}:00`;
+}
+
 export async function createPedido(usuarioId: string, order: ActiveOrder) {
   const payload = {
+    fechaEntregaSolicitada: defaultFechaEntrega(),
+    detalles: order.lines.map((line) => {
+      const isMongoId = /^[0-9a-fA-F]{24}$/.test(line.itemId);
+      return {
+        productoId: isMongoId ? line.itemId : "6aa32e3a57a74865706f64d6",
+        cantidad: Math.max(1, line.quantity),
+      };
+    }),
     items: order.lines.map(linePayload),
     productos: order.lines.map(linePayload),
     lineas: order.lines.map(linePayload),
@@ -140,3 +160,32 @@ export async function fetchUserPedidos(usuarioId: string) {
     .map((entry) => mapPedido(entry))
     .filter((entry): entry is ActiveOrder => Boolean(entry));
 }
+
+export async function fetchAllPedidos(): Promise<ActiveOrder[]> {
+  try {
+    const raw = await apiFetch<unknown>("/api/pedidos");
+    return unwrapList(raw, "pedidos", "orders")
+      .map((entry) => mapPedido(entry))
+      .filter((entry): entry is ActiveOrder => Boolean(entry));
+  } catch {
+    return [];
+  }
+}
+
+export async function patchPedidoEstado(
+  id: string,
+  estadoBackend: "PENDIENTE" | "EN_PREPARACION" | "LISTO" | "ENTREGADO" | "CANCELADO",
+): Promise<ActiveOrder | null> {
+  try {
+    const raw = await apiFetch<unknown>(
+      `/api/pedidos/${encodeURIComponent(id)}/estado?estado=${encodeURIComponent(estadoBackend)}`,
+      {
+        method: "PATCH",
+      },
+    );
+    return mapPedido(raw);
+  } catch {
+    return null;
+  }
+}
+
