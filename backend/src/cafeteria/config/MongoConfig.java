@@ -4,6 +4,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Configuration
 @EnableConfigurationProperties(MongoPoolProperties.class)
 public class MongoConfig {
@@ -20,6 +22,7 @@ public class MongoConfig {
             @Value("${spring.data.mongodb.uri}") String uri,
             MongoPoolProperties pool
     ) {
+        log.info("Conectando a MongoDB: {}", uri.replaceAll(":[^:@]+@", ":****@"));
         ConnectionString connectionString = new ConnectionString(uri);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
