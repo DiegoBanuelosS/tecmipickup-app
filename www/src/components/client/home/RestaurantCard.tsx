@@ -2,7 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { itemPath } from "@config/Router";
+import { storePath } from "@config/Router";
 import { getMenuItem } from "@lib/data/menu";
 import { priceLabel, type Restaurant } from "@lib/data/restaurants";
 import { Star } from "lucide-react";
@@ -24,7 +24,10 @@ type RestaurantCardProps = {
 
 export default function RestaurantCard({ restaurant, favorite, onToggleFavorite }: RestaurantCardProps) {
   const reduceMotion = useReducedMotion();
+  const [coverFailed, setCoverFailed] = useState(false);
   const featured = getMenuItem(restaurant.featuredSlug);
+  const coverImage = restaurant.coverImage && !coverFailed ? restaurant.coverImage : undefined;
+  const tileImage = coverImage || featured?.image;
 
   return (
     <motion.article
@@ -42,19 +45,20 @@ export default function RestaurantCard({ restaurant, favorite, onToggleFavorite 
       />
 
       <Link
-        href={itemPath(restaurant.featuredSlug)}
+        href={storePath(restaurant.slug)}
         className={styles.cardLink}
         aria-label={`${restaurant.name}, ${restaurant.rating} estrellas, listo en ${restaurant.etaMin} a ${restaurant.etaMax} minutos`}
       >
-        <div className={`${styles.tile} ${featured?.image ? styles.tilePhoto : tileClass[restaurant.tint]}`}>
+        <div className={`${styles.tile} ${tileImage ? styles.tilePhoto : tileClass[restaurant.tint]}`}>
           {restaurant.promo ? <span className={styles.promoBadge}>{restaurant.promo}</span> : null}
-          {featured?.image ? (
+          {tileImage ? (
             <Image
-              src={featured.image}
+              src={tileImage}
               alt=""
               fill
               sizes="(max-width: 720px) 72px, 264px"
-              className={styles.tileImg}
+              className={`${styles.tileImg} ${coverImage ? styles.tileLogo : ""}`}
+              onError={() => setCoverFailed(true)}
             />
           ) : (
             <FoodIcon glyph={restaurant.icon} className={styles.tileIcon} />

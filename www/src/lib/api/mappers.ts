@@ -163,6 +163,12 @@ export function mapRestaurant(raw: unknown, index: number): Restaurant | null {
     pick(row, "featuredSlug", "productoDestacado", "featuredProductId", "slug"),
     slugify(name),
   );
+  const defaultCoverImage = id === "tienda-buho"
+    ? "/brands/Vathi_logo.jpg"
+    : id === "tienda-central"
+      ? "/brands/Jorgillo_logo.jpg"
+      : undefined;
+  const coverImage = asString(pick(row, "imagenPortada", "coverImage", "coverUrl")) || defaultCoverImage;
   const categoryIds = unwrapList(pick(row, "categories", "categorias") ?? []).map((entry) =>
     isRecord(entry) ? asString(pick(entry, "id", "categoriaId"), asString(entry.nombre)) : asString(entry),
   );
@@ -171,6 +177,8 @@ export function mapRestaurant(raw: unknown, index: number): Restaurant | null {
     id,
     slug: asString(pick(row, "slug"), slugify(name)),
     name,
+    description: asString(pick(row, "descripcion", "description")) || undefined,
+    coverImage,
     categories: categoryIds.filter(Boolean),
     icon: glyphFromLabel(asString(pick(row, "icon", "icono"), name)),
     tint: tints[index % tints.length],

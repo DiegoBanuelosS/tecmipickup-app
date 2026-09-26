@@ -443,6 +443,10 @@
 .tileImg {
   object-fit: cover;
 }
+.tileLogo {
+  object-fit: contain;
+}
+
 
 .tileMist {
   background: #f4f4f4;

@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import ClientShell from "../../components/client/ClientShell";
-import AdCarousel from "../../components/client/home/AdCarousel";
 import CategoryRail from "../../components/client/home/CategoryRail";
 import HomeSkeleton from "../../components/client/home/HomeSkeleton";
 import RestaurantCard from "../../components/client/home/RestaurantCard";
-import { FoodIcon } from "../../components/client/home/FoodIcons";
 import { restaurantsForCategory } from "@lib/api";
 import { filterByCategory, type Restaurant } from "@lib/data/restaurants";
 import { useFavorites } from "@lib/favorites";
@@ -67,7 +65,7 @@ export default function ClientHome() {
     return () => {
       cancelled = true;
     };
-  }, [category]);
+  }, [category, data?.products]);
 
   const visible = useMemo(() => {
     if (!data) {
@@ -115,27 +113,14 @@ export default function ClientHome() {
           <CategoryRail categories={data.categories} active={category} onSelect={setCategory} />
         </motion.div>
 
-        <motion.div variants={fadeUp}>
-          <AdCarousel ads={data.ads} restaurants={data.restaurants} />
-        </motion.div>
-
-        <motion.section variants={fadeUp} aria-live="polite">
+        <motion.section variants={fadeUp} aria-labelledby="stores-heading" aria-live="polite">
           <div className={styles.sectionHead}>
-            <h2 className={styles.sectionTitle}>Destacado</h2>
-            <motion.span
-              key={visible.length}
-              className={styles.sectionCount}
-              initial={reduceMotion ? false : { scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            >
-              {visible.length}
-            </motion.span>
+            <h2 id="stores-heading" className={styles.sectionTitle}>
+              {category === "todo" ? "Tiendas" : "Tiendas de esta categoría"}
+            </h2>
+            <span className={styles.sectionCount}>{visible.length}</span>
           </div>
-        </motion.section>
-
-        <motion.div className={styles.grid} layout={!reduceMotion} variants={fadeUp}>
-          <AnimatePresence mode="popLayout" initial={false}>
+          <div className={styles.grid}>
             {visible.map((restaurant) => (
               <RestaurantCard
                 key={restaurant.id}
@@ -144,8 +129,8 @@ export default function ClientHome() {
                 onToggleFavorite={toggle}
               />
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+        </motion.section>
 
         <AnimatePresence>
           {visible.length === 0 ? (
@@ -156,15 +141,15 @@ export default function ClientHome() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
             >
-              <FoodIcon glyph="plate" className={styles.emptyIcon} />
-              <h3 className={styles.emptyTitle}>Nada por aquí todavía</h3>
-              <p className={styles.emptyCopy}>Prueba con otra categoría o explora todo el campus.</p>
+              <h3 className={styles.emptyTitle}>No hay tiendas en esta categoría</h3>
+              <p className={styles.emptyCopy}>Prueba con otra categoría o vuelve a ver todas las tiendas.</p>
               <button type="button" className={styles.emptyReset} onClick={() => setCategory("todo")}>
-                Ver todo
+                Ver tiendas
               </button>
             </motion.div>
           ) : null}
         </AnimatePresence>
+
       </motion.div>
     </ClientShell>
   );
